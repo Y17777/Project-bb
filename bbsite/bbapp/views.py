@@ -3,11 +3,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.http import HttpResponse, HttpResponseNotFound
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
-from django.views import View
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 
+from .filters import CommentFilterSet
 from .forms import AddPostForm, UploadFileForm, CommentForm
 from .models import Bullets, UploadFiles, Comment
 from bbapp.utils import DataMixin
@@ -41,8 +41,6 @@ class AddPage(LoginRequiredMixin, DataMixin, CreateView):
     form_class = AddPostForm
     template_name = 'bbapp/addpage.html'
     title_page = 'Добавление статьи'
-
-    # permission_required = 'bbapp.add_bbapp'
 
     def form_valid(self, form):
         bb = form.save(commit=False)
@@ -118,19 +116,20 @@ class ShowPosts(DataMixin, DetailView, CreateComment):
         return get_object_or_404(Bullets.published, pk=self.kwargs[self.pk_url_kwarg])
 
 
-# class ShowUserComments(LoginRequiredMixin, DataMixin, ListView):
-#     model = Comment
-#     template_name = 'bbapp/list_comments.html'
-#     form_class = CommentForm
-#     context_object_name = 'comments'
-#
-#     def get_queryset(self):
-#         queryset = super().get_queryset()
-#         return queryset
-#
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         return context
+class ShowUserComments(LoginRequiredMixin, DataMixin, TemplateView):
+    template_name = 'bbapp/list_comments.html'
+    # form_class = CommentFilterSet
+    context_object_name = 'comments'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        #         return context
+        # context['filterset'] = CommentFilterSet(self.request.GET, queryset, request=self.request.user.id)
+        return context
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset
 
 
 class BulletsCategory(DataMixin, ListView):

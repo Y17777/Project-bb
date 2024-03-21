@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'ckeditor_uploader',
     'bbapp',
     'accounts',
+    'django_filters',
 
 ]
 

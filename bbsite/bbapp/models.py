@@ -85,16 +85,3 @@ class Comment(models.Model):
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
 
-
-
-    # @property
-    # def number_of_comments(self):
-    #     return Comment.objects.filter(commentPost=self).count()
-
-    # def like(self):
-    #     self.rating += 1
-    #     self.save()
-    #
-    # def dislike(self):
-    #     self.rating -= 1
-    #     self.save()
