@@ -31,7 +31,20 @@ class CommentForm(forms.ModelForm):
         model = Comment
         fields = ['text']
         labels = {
-            'text': 'Dfj Комментарий',
+            'text': 'Комментарий',
+        }
+        widgets = {
+            'text': forms.Textarea(attrs={'cols': 100, 'rows': 2}),
+        }
+
+
+class CommentUserForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['text',
+                  'commentAuthor']
+        labels = {
+            'text': 'Комментарий',
         }
         widgets = {
             'text': forms.Textarea(attrs={'cols': 100, 'rows': 2}),

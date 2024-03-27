@@ -1,39 +1,28 @@
 {% extends 'default.html' %}
 
-{% block title %}
-Comments
-{% endblock title %}
-
 {% block content %}
-<h1>Отклики к моим статьям</h1>
-<!--    <h5>Количество: {{ comments|length }}</h5>-->
-<hr>
-<!--<form action="" method="get">-->
-<!--	-->
-<!--	<input type="submit" value="Find">-->
-<!--</form>-->
-<!--{{ filterset.form.as_p }}-->
-{% for comment in comments %}
+
+<h5>Отклики к статье: {{''}}</h5>
+
+    <hr>
+{% csrf_token %}
+{% for comment in list_comments %}
 
 <ul class="list-articles">
     <li>
 	<div class="article-panel">
-		<p class="first">Автор статьи: {{comment.post}}</p>
-		<p class="last">Дата: {{comment.dateCreation|date:"d-m-Y H:i:s"}}</p>
-	</div>
-		<p class="first">Статья: {{comment.commentPost}}</p>
-		<table>
-			<tr>
-				<td align="left">{{ comment.commentUser }}:</td>
-               <td>{{ comment.text|linebreaks|truncatewords:40 }}</td>
 
-               	<td align="left"><a href="#">Принять</a></td>
-				<td align="right"><a href="#">Удалить</a></td>
-			</tr>
-		</table>
-<!--			<div class="clear"></div>-->
-<!--			<p class="link-read-post"><a href="{{ comment.get_absolute_url }}">Подробнее</a></p>-->
-	</li>
+		<p class="first">Автор: {{ comment.commentUser.username|default:"Неизвестен" }}</p>
+		<p class="last">Дата: {{comment.dateCreation|date:"d-m-Y H:i:s"}}</p>
+
+	</div>
+    </li>
 </ul>
+    <table>
+        <td width="83%">{{ comment.text }}</td>
+        <td width="10%"><a href="">Принять</a></td>
+        <td><a href="">Удалить</a></td>
+    </table>
+
 {% endfor %}
-{% endblock content %}
+{% endblock%}

@@ -14,9 +14,10 @@ from bbapp.utils import DataMixin
 
 
 class BulletsHome(DataMixin, ListView):
-    # model = Bullets
+    model = Bullets
+    paginate_by = 4
     template_name = 'bbapp/index.html'
-    context_object_name = 'posts'
+    context_object_name = 'bullets'
     title_page = 'Главная страница'
     cat_selected = 0
 
@@ -59,7 +60,6 @@ class EditPage(LoginRequiredMixin, DataMixin, UpdateView):
 
 class DeletePage(PermissionRequiredMixin, DataMixin, DeleteView):
     permission_required = ('bbapp.delete_post',)
-    # form_class = PostForm
     model = Bullets
     template_name = 'bbapp/deletepage.html'
     success_url = reverse_lazy('home')
@@ -82,8 +82,6 @@ class CreateComment(LoginRequiredMixin, CreateView):
         comment = form.save(commit=False)
         post = get_object_or_404(Bullets, pk=self.kwargs['pk'])
         comment.commentUser = self.request.user
-        # comment.commentAutor = self.request.user
-        # comment.text = self.request.text
         comment.commentPost_id = self.kwargs['pk']
         comment.save()
         author = User.objects.get(pk=post.author_id)
@@ -104,37 +102,48 @@ class CreateComment(LoginRequiredMixin, CreateView):
 
 class ShowPosts(DataMixin, DetailView, CreateComment):
     template_name = 'bbapp/post.html'
-    # slug_url_kwarg = 'post_slug'
-    context_object_name = 'post'
+    context_object_name = 'show_post'
     pk_url_kwarg = 'pk'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        return self.get_mixin_context(context, title=context['post'].title)
+        return self.get_mixin_context(context, title=context['show_post'].title)
 
     def get_object(self, queryset=None):
         return get_object_or_404(Bullets.published, pk=self.kwargs[self.pk_url_kwarg])
 
 
-class ShowUserComments(LoginRequiredMixin, DataMixin, TemplateView):
+class ShowUserPosts(LoginRequiredMixin, DataMixin, ListView):
+    model = Bullets
+    paginate_by = 20
+    template_name = 'bbapp/list_mypost.html'
+    context_object_name = 'userPost'
+    title = f'Bullets.pk | {Bullets.title}'
+
+
+class ShowComments(LoginRequiredMixin, DataMixin, ListView):
+    model = Comment
+    paginate_by = 20
     template_name = 'bbapp/list_comments.html'
-    # form_class = CommentFilterSet
-    context_object_name = 'comments'
+    context_object_name = 'list_comments'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        #         return context
-        # context['filterset'] = CommentFilterSet(self.request.GET, queryset, request=self.request.user.id)
-        return context
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     queryset = Comment.objects.filter(commentPost__author_id=self.request.user.id)
+    #     context['filterset'] = CommentFilterSet(self.request.GET, queryset, request=self.request.user.id)
+    #     return context
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        return queryset
+
+class DeleteComment(LoginRequiredMixin, DataMixin, DeleteView):
+    permission_required = ('bbapp.delete_comment',)
+    model = Comment
+    template_name = 'bbapp/deletepage.html'
+    success_url = reverse_lazy('post_comments')
 
 
 class BulletsCategory(DataMixin, ListView):
     template_name = 'bbapp/index.html'
-    context_object_name = 'posts'
+    context_object_name = 'bullets'
     allow_empty = False
 
     def get_queryset(self):
@@ -142,7 +151,7 @@ class BulletsCategory(DataMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        cat = context['posts'][0].cat
+        cat = context['bullets'][0].cat
         return self.get_mixin_context(context, title='Категория - ' + cat.name, cat_selected=cat.pk)
 
 

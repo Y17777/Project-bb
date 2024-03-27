@@ -68,16 +68,3 @@ class UserPasswordChangeForm(PasswordChangeForm):
     new_password1 = forms.CharField(label="Новый пароль", widget=forms.PasswordInput(attrs={'class': 'form-input'}))
     new_password2 = forms.CharField(label="Подтверждение пароля", widget=forms.PasswordInput(attrs={'class': 'form'
                                                                                                              '-input'}))
-
-
-class CommentUserForm(forms.ModelForm):
-    class Meta:
-        model = Comment
-        fields = ['text',
-                  'commentAuthor']
-        labels = {
-            'text': 'Комментарий',
-        }
-        widgets = {
-            'text': forms.Textarea(attrs={'cols': 100, 'rows': 2}),
-        }

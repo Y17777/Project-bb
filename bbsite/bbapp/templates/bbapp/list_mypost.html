@@ -1,26 +1,27 @@
 {% extends 'default.html' %}
 
+{% block title %}
+
+{% endblock title %}
+
 {% block content %}
+<h1>Статьи пользователя {{user}}</h1>
 
 <ul class="list-articles">
-	{% for bullet in bullets %}
+	{% for bullet in userPost %}
+	{% if bullet.author.id == user.id %}
 	<li>
 	<div class="article-panel">
 		<p class="first">Категория: {{bullet.cat.name}} | автор: {{ bullet.author.username|default:"Неизвестен" }}</p>
 		<p class="last">Дата: {{bullet.dateUpdate|date:"d-m-Y H:i:s"}}</p>
 	</div>
 
-{% if bullet.photo %}
-		<p><img class="img-article-left thumb" src="{{bullet.photo.url}}" alt=""></p>
-{% endif %}
+		<h4>{{bullet.title}}</h4>
 
-		<h2>{{bullet.title}}</h2>
-    {% autoescape off %}
-	{{bullet.content|linebreaks|truncatewords:40}}
-    {% endautoescape %}
-			<div class="clear"></div>
-			<p class="link-read-post"><a href="{{ bullet.get_absolute_url }}">Подробнее</a></p>
+		<a href="{% url 'post_comments' bullet.id %}">Отклики</a>
+
 	</li>
+	{% endif %}
 	{% endfor %}
 </ul>
 {% endblock %}

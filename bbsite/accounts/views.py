@@ -8,7 +8,7 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, UpdateView, ListView
 from django_filters import FilterSet
 
-from accounts.forms import LoginForm, RegisterForm, ProfileUserForm, UserPasswordChangeForm, CommentUserForm
+from accounts.forms import LoginForm, RegisterForm, ProfileUserForm, UserPasswordChangeForm
 from bbapp.forms import CommentForm
 from bbapp.models import Comment
 from bbapp.utils import DataMixin
@@ -43,21 +43,6 @@ class ProfileUser(LoginRequiredMixin, UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user
-
-
-# class ShowUserComments(FilterSet):
-#     model = Comment
-#     template_name = 'accounts/list_comments.html'
-#     form_class = CommentUserForm
-#     context_object_name = 'comm'
-#
-#     def get_queryset(self):
-#         queryset = super().get_queryset()
-#         return queryset
-#
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         return context
 
 
 class UserPasswordChange(PasswordChangeView):

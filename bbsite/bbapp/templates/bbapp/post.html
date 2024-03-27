@@ -2,19 +2,20 @@
 
 
 {% block breadcrumbs %}
-{% if user.is_authenticated %}
-<p><a href="{% url 'edit_page' post.pk %}">Редактировать</a>
-    <a href="{% url 'delete_page' post.pk %}">Удалить</a></p>
+{% if show_post.author == User %}
+<p><a href="{% url 'edit_page' show_post.pk %}">Редактировать</a>
+    <a href="{% url 'delete_page' show_post.pk %}">Удалить</a></p>
 {% endif %}
 {% endblock%}
 
 
 {% block content %}
-<h1>{{post.title}}</h1>
-{% if post.photo %}
-<p><img class="img-article-left" src="{{ post.photo.url }}"></p>
-{{post.content|safe|linebreaks}}
+<h1>{{show_post.title}}</h1>
+{% if show_post.photo %}
+<p><img class="img-article-left" src="{{ show_post.photo.url }}"></p>
+<br>
 {% endif %}
+{{show_post.content|safe|linebreaks}}
 
 <br>
 <h5>Оставить комментарий</h5>
@@ -32,7 +33,7 @@
 <br>
     <h5>Комментарии:</h5>
     <hr>
-{% for comment in post.comment_set.all %}
+{% for comment in show_post.comment_set.all %}
 <ul class="list-articles">
     <li>
 	<div class="article-panel">

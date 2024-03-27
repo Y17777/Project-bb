@@ -12,4 +12,4 @@ class CommentFilterSet(FilterSet):
 
         def __init__(self, *args, **kwargs):
             super(CommentFilterSet, self).__init__(*args, **kwargs)
-            self.fields['commentPost'].queryset = Bullets.objects.filter(author_id=kwargs['request'])
+            self.filters['commentUser'].queryset = Bullets.objects.filter(author_id=kwargs['request'])

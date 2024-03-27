@@ -59,7 +59,7 @@ class Category(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('category', kwargs={'cat_slug': self.slug})
+        return reverse('category', kwargs={'pk': self.pk})
 
 
 class UploadFiles(models.Model):
@@ -69,12 +69,12 @@ class UploadFiles(models.Model):
 class Comment(models.Model):
     commentPost = models.ForeignKey(Bullets, on_delete=models.CASCADE, verbose_name='Статья')
     commentUser = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор комментария')
-    text = models.TextField()
-    dateCreation = models.DateTimeField(auto_now_add=True)
     commentAuthor = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, verbose_name='Автор статьи',
                                       related_name='comments', null=True, default=None)
+    text = models.TextField()
+    dateCreation = models.DateTimeField(auto_now_add=True)
+    status = models.SmallIntegerField(default=0)
 
-    # rating = models.SmallIntegerField(default=0)
     def __str__(self):
         return f'{self.commentUser} : {self.text}'
 
@@ -84,4 +84,3 @@ class Comment(models.Model):
     class Meta:
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
-

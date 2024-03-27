@@ -5,7 +5,7 @@ menu = [{'title': "ПРОЕКТ MMORPG - Fan", 'url_name': 'home'},
 
 
 class DataMixin:
-    paginate_by = 4
+
     title_page = None
     cat_selected = None
     extra_context = {}
